@@ -10,8 +10,8 @@ module Fern
       module ClassMethods
       end
 
-      def doc(str)
-        @controller.fern[@name][:doc] = str
+      def desc(str)
+        @controller.fern[@name][:desc] = str
       end
     end
   end
