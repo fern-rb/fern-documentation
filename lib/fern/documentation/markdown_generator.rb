@@ -2,7 +2,7 @@ require 'mustache'
 
 module Fern
   module Documentation
-    class EndpointDocumentationGenerator
+    class MarkdownGenerator
       TEMPLATE = %(# {{verb}} {{path}}
 
 _{{controller}}\#{{action}}_
@@ -17,7 +17,31 @@ _{{controller}}\#{{action}}_
 {{#parameters}}
 | {{name}} | `{{ type }}` | {{ array }} | {{ required }} | {{ min }} | {{ max }} | {{ values }} | {{ default }} |
 {{/parameters}}
-{{/has_parameters}}).freeze
+{{/has_parameters}}
+
+{{#has_form}}
+## Form
+
+{{#form}}
+### Class
+
+`{{klass}}`
+
+{{#key}}
+### Key
+
+`{{key}}`
+{{/key}}
+{{/form}}
+
+{{#presenter}}
+## Presenter
+
+### Class
+
+`{{presenter}}`
+{{/presenter}}
+{{/has_form}}).freeze
 
       def initialize(analysis)
         @analysis = analysis
@@ -34,7 +58,10 @@ _{{controller}}\#{{action}}_
           action: @analysis[:action],
           doc: @analysis[:doc],
           has_parameters: params.present?,
-          parameters: params
+          parameters: params,
+          has_form: @analysis[:form].present?,
+          form: @analysis[:form],
+          presenter: @analysis[:presenter]
         )
       end
 
@@ -54,7 +81,7 @@ _{{controller}}\#{{action}}_
           required: check(constraints[:required]),
           min: constraints[:min],
           max: constraints[:max],
-          values: constraints[:values].join(', '),
+          values: constraints[:values]&.join(', '),
           default: constraints[:default]
         }
       end

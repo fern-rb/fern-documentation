@@ -6,6 +6,10 @@ module Fern
       end
 
       def analyze
+      	return nil if path.nil?
+
+        puts "Analyzing #{path}"
+
         {
           verb: verb,
           path: path,
@@ -13,7 +17,9 @@ module Fern
           controller: controller,
           action: action,
           params: fern[:params],
-          desc: fern[:desc]
+          doc: fern[:doc],
+          form: fern[:form],
+          presenter: fern[:presenter]
         }
       end
 
