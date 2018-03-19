@@ -23,6 +23,7 @@ _{{controller}}\#{{action}}_
 ## Form
 
 {{#form}}
+
 ### Class
 
 `{{klass}}`
@@ -32,6 +33,15 @@ _{{controller}}\#{{action}}_
 
 `{{key}}`
 {{/key}}
+
+### Schema
+
+| Name | Type
+| ---- | ----
+{{#form_schema}}
+| {{name}} | `{{ type }}`
+{{/form_schema}}
+
 {{/form}}
 
 {{#presenter}}
@@ -49,6 +59,7 @@ _{{controller}}\#{{action}}_
 
       def generate
         params = build_params
+        form_schema = build_form_schema
 
         Mustache.render(
           TEMPLATE,
@@ -61,6 +72,7 @@ _{{controller}}\#{{action}}_
           parameters: params,
           has_form: @analysis[:form].present?,
           form: @analysis[:form],
+          form_schema: form_schema,
           presenter: @analysis[:presenter]
         )
       end
@@ -83,6 +95,18 @@ _{{controller}}\#{{action}}_
           max: constraints[:max],
           values: constraints[:values]&.join(', '),
           default: constraints[:default]
+        }
+      end
+
+      def build_form_schema
+        return if @analysis[:form_schema].nil?
+        @analysis[:form_schema].map { |name, config| build_schema(name, config) }
+      end
+
+      def build_schema(name, config)
+        {
+          name: name,
+          type: config.primitive
         }
       end
 
