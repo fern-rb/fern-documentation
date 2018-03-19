@@ -6,11 +6,11 @@ module Fern
       end
 
       def analyze
-      	return nil if path.nil?
+      	return nil if path.nil? || !defined?(controller.fern)
 
         puts "Analyzing #{path}"
 
-        {
+        result = {
           verb: verb,
           path: path,
           controller_name: controller_name,
@@ -21,6 +21,10 @@ module Fern
           form: fern[:form],
           presenter: fern[:presenter]
         }
+        if fern[:form].present?
+          result[:form_schema] = fern[:form][:klass].schema
+        end
+        result
       end
 
       private
