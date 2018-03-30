@@ -43,15 +43,14 @@ _{{controller}}\#{{action}}_
 {{/form_schema}}
 
 {{/form}}
-
+{{/has_form}}
 {{#presenter}}
 ## Presenter
 
 ### Class
 
 `{{presenter}}`
-{{/presenter}}
-{{/has_form}}).freeze
+{{/presenter}}).freeze
 
       def initialize(analysis)
         @analysis = analysis
