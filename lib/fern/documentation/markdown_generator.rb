@@ -26,13 +26,14 @@ _{{controller}}\#{{action}}_
 ### Class
 
 `{{klass}}`
+{{/form}}
 
 {{#key}}
 ### Key
 
 `{{key}}`
 {{/key}}
-{{/form}}
+{{/has_form}}
 
 {{#presenter}}
 ## Presenter
@@ -41,7 +42,7 @@ _{{controller}}\#{{action}}_
 
 `{{presenter}}`
 {{/presenter}}
-{{/has_form}}).freeze
+).freeze
 
       def initialize(analysis)
         @analysis = analysis
@@ -56,13 +57,13 @@ _{{controller}}\#{{action}}_
           path: @analysis[:path],
           controller: @analysis[:controller],
           action: @analysis[:action],
-          doc: @analysis[:doc],
+          doc: strip_leading_whitespace(@analysis[:doc]),
           has_parameters: params.present?,
           parameters: params,
           has_form: @analysis[:form].present?,
           form: @analysis[:form],
           presenter: @analysis[:presenter]
-        )
+        ).gsub(/\n{2,}/, "\n\n")
       end
 
       private
@@ -88,6 +89,23 @@ _{{controller}}\#{{action}}_
 
       def check(val)
         val ? '✓' : ''
+      end
+
+      def strip_leading_whitespace(str)
+        return nil if str.nil?
+        
+        lines = str.split("\n")
+        first_line = lines.first
+        first_line = lines.second if first_line == ''
+        whitespace_to_trim = /^\s*/.match(first_line).to_s
+
+        new_lines = []
+
+        lines.each do |line|
+          new_lines << line.sub(whitespace_to_trim, '')
+        end
+        
+        new_lines.join("\n")
       end
     end
   end

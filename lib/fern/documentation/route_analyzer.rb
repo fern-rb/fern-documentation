@@ -6,8 +6,10 @@ module Fern
       end
 
       def analyze
-      	return nil if path.nil?
-
+      	if !controller&.method_defined?(:fern) || controller.fern.nil?
+          return nil
+        end
+        
         puts "Analyzing #{path}"
 
         {
@@ -30,7 +32,7 @@ module Fern
       end
 
       def controller
-        "#{controller_name.camelize}Controller".constantize
+        "#{controller_name.camelize}Controller".constantize rescue nil
       end
 
       def controller_name

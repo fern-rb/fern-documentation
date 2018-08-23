@@ -10,12 +10,11 @@ namespace :fern do
 
     Rails.application.routes.routes.each do |route|
       next if route.internal
+
       analysis = Fern::Documentation::RouteAnalyzer.new(route).analyze
 
-      if analysis.nil?
-	    puts "Skipping route"
-      else
-      	endpoints << analysis
+      unless analysis.nil?
+        endpoints << analysis
       end
     end
 
