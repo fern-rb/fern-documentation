@@ -3,6 +3,7 @@ require 'mustache'
 module Fern
   module Documentation
     class MarkdownGenerator
+      # rubocop:disable Metrics/LineLength
       TEMPLATE = %(# {{verb}} {{path}}
 
 _{{controller}}\#{{action}}_
@@ -43,6 +44,7 @@ _{{controller}}\#{{action}}_
 `{{presenter}}`
 {{/presenter}}
 ).freeze
+      # rubocop:enable Metrics/LineLength
 
       def initialize(analysis)
         @analysis = analysis
@@ -93,7 +95,7 @@ _{{controller}}\#{{action}}_
 
       def strip_leading_whitespace(str)
         return nil if str.nil?
-        
+
         lines = str.split("\n")
         first_line = lines.first
         first_line = lines.second if first_line == ''
@@ -104,7 +106,7 @@ _{{controller}}\#{{action}}_
         lines.each do |line|
           new_lines << line.sub(whitespace_to_trim, '')
         end
-        
+
         new_lines.join("\n")
       end
     end

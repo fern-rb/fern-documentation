@@ -13,9 +13,7 @@ namespace :fern do
 
       analysis = Fern::Documentation::RouteAnalyzer.new(route).analyze
 
-      unless analysis.nil?
-        endpoints << analysis
-      end
+      endpoints << analysis unless analysis.nil?
     end
 
     doc_root = Rails.root.join('docs', 'api')
@@ -24,8 +22,14 @@ namespace :fern do
     FileUtils.mkdir_p(doc_root)
 
     endpoints.each do |endpoint|
-      filename = "#{endpoint[:controller_name]}-#{endpoint[:action]}.md"
-      filepath = File.join(doc_root, filename)
+      filename = "#{endpoint[:action]}.md"
+      filepath = File.join(
+        doc_root,
+        File.join(
+          endpoint[:controller_name],
+          filename
+        )
+      )
       filedir = File.dirname(filepath)
       FileUtils.mkdir_p(filedir)
       content = Fern::Documentation::MarkdownGenerator.new(endpoint).generate

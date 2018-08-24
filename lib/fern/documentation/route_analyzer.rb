@@ -6,11 +6,7 @@ module Fern
       end
 
       def analyze
-      	if !controller&.method_defined?(:fern) || controller.fern.nil?
-          return nil
-        end
-        
-        puts "Analyzing #{path}"
+        return unless fern_controller?
 
         {
           verb: verb,
@@ -32,7 +28,9 @@ module Fern
       end
 
       def controller
-        "#{controller_name.camelize}Controller".constantize rescue nil
+        "#{controller_name.camelize}Controller".constantize
+      rescue NameError
+        nil
       end
 
       def controller_name
@@ -41,6 +39,10 @@ module Fern
 
       def fern
         controller.fern[action.to_sym]
+      end
+
+      def fern_controller?
+        controller&.method_defined?(:fern) && controller.fern.present?
       end
 
       def path
